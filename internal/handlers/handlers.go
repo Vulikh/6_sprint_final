@@ -19,6 +19,8 @@ func IndexHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	http.ServeFile(w, req, "../index.html")
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
 func UploadHandler(w http.ResponseWriter, req *http.Request) {
