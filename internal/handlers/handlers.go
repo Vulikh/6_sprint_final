@@ -12,15 +12,29 @@ import (
 	"github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
+const path = "./index.html"
+
 func IndexHandler(w http.ResponseWriter, req *http.Request) {
 	// Поддерживаем только GET
 	if req.Method != http.MethodGet {
 		http.Error(w, fmt.Sprintf("Сервер не поддерживает %s запросы", req.Method), http.StatusInternalServerError)
 		return
 	}
-	http.ServeFile(w, req, "../index.html")
+
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
+		return
+	}
+
+	htmlContent, err := os.ReadFile(absPath)
+	if err != nil {
+		http.Error(w, "Ошибка сервера", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(htmlContent)
 }
 
 func UploadHandler(w http.ResponseWriter, req *http.Request) {
